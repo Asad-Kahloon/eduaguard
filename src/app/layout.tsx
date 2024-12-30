@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Header from "@/components/header/header";
+import { ScrollProgress } from "@/components/ui/scrollProgress";
+import Footer from "@/components/footer/footer";
 
 export const metadata: Metadata = {
   title: "EduaGuard",
@@ -16,7 +19,10 @@ export default function RootLayout({
       <body
         className="antialiased"
       >
+        <Header />
+        <ScrollProgress />
         {children}
+        <Footer/>
       </body>
     </html>
   );
