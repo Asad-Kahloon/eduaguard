@@ -11,7 +11,6 @@ type BentoGridProps = {
 
 type BentoCardProps = {
   name: string;
-  background: ReactNode;
   ImageUrl: string;
   description: string;
   href: string;
@@ -32,7 +31,6 @@ const BentoGrid = ({ children, className }: BentoGridProps) => {
 
 const BentoCard = ({
   name,
-  background,
   ImageUrl,
   description,
   href,
@@ -47,7 +45,6 @@ const BentoCard = ({
       "transform-gpu dark:bg-gray-100 dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
     )}
   >
-    <div>{background}</div>
     <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-6 transition-all duration-300 group-hover:-translate-y-10">
         <div className="w-full flex justify-center">
         <Image 

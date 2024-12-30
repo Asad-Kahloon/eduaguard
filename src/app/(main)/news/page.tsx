@@ -12,21 +12,18 @@ function page() {
           name: "New Education Policy Announced",
           description: "The government has announced a sweeping reform aimed at modernizing the curriculum and improving access to education. Here's everything you need to know about the new policy changes...",
           href: "#",
-          background: <img className="absolute -right-20 -top-20 opacity-60" />,
         },
         {
           ImageUrl: '/images/ttol.jpg',
           name: "Top 10 Online Learning Platforms for 2024",
           description: "These platforms are revolutionizing education, offering quality courses from top universities. Explore our list of the best online learning platforms...",
           href: "#",
-          background: <img className="absolute -right-20 -top-20 opacity-60" />,
         },
         {
           ImageUrl: '/images/AI.jpg',
           name: "AI in Education: A Revolution",
           description: "Artificial intelligence is transforming education by providing personalized learning experiences and automating tasks. Learn about its impact...",
           href: "#",
-          background: <img className="absolute -right-20 -top-20 opacity-60" />,
         },
         
       ];

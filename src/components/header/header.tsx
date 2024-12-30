@@ -5,6 +5,7 @@ import { BorderBeam } from '../ui/borderBeam';
 import Link from 'next/link';
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem} from "@nextui-org/dropdown";
 import { ChevronDown, Menu, X } from 'lucide-react';
+import Image from 'next/image';
 
 function Header() {
 
@@ -62,9 +63,11 @@ function Header() {
   return (
     <>
       <div className='w-full flex justify-between py-4 px-4 sm:px-16 items-center'>
-        <img
+        <Image
             src="/images/logo.png"
             alt="Logo"
+            width={400}
+            height={400}
             className='h-32 w-auto hidden sm:block'
         />
         <h1 className='text-4xl sm:text-6xl font-bold sm:font-extrabold sm:tracking-widest'>
