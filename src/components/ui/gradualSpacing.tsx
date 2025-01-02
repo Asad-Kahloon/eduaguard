@@ -24,7 +24,7 @@ export function GradualSpacing({
   className,
 }: GradualSpacingProps) {
   return (
-    <Link href='/' className="flex justify-center space-x-1">
+    <Link href='#' className="flex justify-center space-x-1">
       <AnimatePresence>
         {text.split("").map((char, i) => (
           <motion.h1

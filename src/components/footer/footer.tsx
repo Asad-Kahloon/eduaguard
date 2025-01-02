@@ -5,7 +5,7 @@ import { Facebook, Instagram, Twitter } from 'lucide-react';
 function Footer() {
     return (
         <div className='py-8 shadow-[0_-2px_4px_rgba(0,0,0,0.1)]'>
-          <p className='w-full text-center text-2xl font-serif font-bold'>
+          <p className='w-full text-center text-2xl font-serif font-bold text-black'>
             © 2024 Simple Website. All rights reserved.
           </p>
           <div className='flex justify-center gap-16 mt-4'>

@@ -85,19 +85,19 @@ function page() {
 
   return (
     <>
-      <div className='bg-gray-100 flex flex-col items-center gap-6 py-32 w-full'>
+      <div className='bg-gray-100 flex flex-col items-center gap-6 py-32 w-full text-black'>
         <h1 className='text-5xl font-bold font-serif w-2/3 text-center'>Stay Informed with the Latest in Education</h1>
         <p className='text-3xl font-serif w-2/3 text-center'>Get updates on the most recent education news, trends, and insights from around the world. Discover policies, innovations, and new learning platforms reshaping the future.</p>
       </div>
 
-      <div className='py-32 grid grid-cols-1 sm:grid-cols-3 gap-6 px-8 '>
+      <div className='py-32 grid grid-cols-1 sm:grid-cols-3 gap-6 px-8 text-black'>
         <h1 className='sm:col-span-3 text-center text-4xl font-serif font-bold mb-8'>Featured Stories</h1>
         {news.map((feature) => (
             <BentoCard key={feature.name} {...feature} />
         ))}
       </div>
 
-      <div className="py-16 px-8">
+      <div className="py-16 px-8 text-black">
         <h1 className="text-center text-4xl font-serif font-bold mb-8">
           Latest Articles
         </h1>
@@ -136,11 +136,11 @@ function page() {
         </div>
       </div>
 
-      <div className='py-24 px-8'>
+      <div className='py-24 px-8 text-black'>
         <h1 className="text-center text-4xl font-serif font-bold mb-8">
           Related Topics
         </h1>
-        <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 px-8'>
+        <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 px-8 text-black'>
             {topics.map((topic) => (
                 <Link href={topic.url} key={topic.id} className='p-2 shadow-md rounded-lg text-center hover:bg-gray-100 hover:text-blue-500 hover:font-bold hover:underline transition-all duration-300'>
                 {topic.name}

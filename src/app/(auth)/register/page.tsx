@@ -29,14 +29,14 @@ export default function Home() {
         </h1>
 
         <div className="flex flex-col gap-2 w-96 border-b border-gray-600 rounded-lg p-2">
-          <input type="text" placeholder="username"className=" w-full focus:outline-none placeholder-gray-500"/>
+          <input type="text" placeholder="username"className=" w-full text-black focus:outline-none placeholder-gray-500"/>
         </div>
         
         <div className="flex flex-col gap-2 w-96 border-b border-gray-600 rounded-lg p-2 relative">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="password"
-            className="w-full focus:outline-none placeholder-gray-500"
+            className="w-full focus:outline-none placeholder-gray-500 text-black"
           />
           <button
             type="button"
@@ -86,7 +86,7 @@ export default function Home() {
           <input
             type={showConfirmPassword ? "text" : "password"}
             placeholder="confirm password"
-            className="w-full focus:outline-none placeholder-gray-500"
+            className="w-full focus:outline-none text-black placeholder-gray-500"
           />
           <button
             type="button"
@@ -135,7 +135,7 @@ export default function Home() {
         <div className="flex flex-col gap-4 w-96">
 
           <div className="relative justify-center mx-auto">
-            <InteractiveHoverButton text="Submit" className="border border-gray-600 hover:bg-gray-200 " />
+            <InteractiveHoverButton text="Submit" className="border text-black border-gray-600 hover:bg-gray-200 " />
           </div>
 
           <div className="flex flex-col gap-2 w-96 text-sm">
