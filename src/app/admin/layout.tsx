@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import Header from "@/components/header/header";
+import { ScrollProgress } from "@/components/ui/scrollProgress";
+import Footer from "@/components/footer/footer";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
@@ -18,7 +20,10 @@ export default function RootLayout({
         className="antialiased"
       >
         <Toaster position="top-right"/>
+        <Header />
+        <ScrollProgress />
         {children}
+        <Footer/>
       </body>
     </html>
   );

@@ -5,19 +5,82 @@ import {DotPattern}  from "@/components/ui/dotPattern";
 import { BorderBeam } from "@/components/ui/borderBeam";
 import {LetterPullup} from "@/components/ui/letterPullup";
 import InteractiveHoverButton from "@/components/ui/interactiveHoverButton"
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase"
+import { toast } from "sonner";
+// import { useRouter } from "next/navigation";
 
 export default function Home() {
 
+    // const router = useRouter()
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const [form, setForm] = useState<{
+    email: string
+    password: string
+    confirmPassword: string
+  }>({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  })
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target
+      setForm((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }))
+    }
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   }
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword((prevState) => !prevState);
+  }
+
+  const signup = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    if(!form.email || !form.password || !form.confirmPassword){
+      toast.error("all fields are required");
+      setIsLoading(false)
+      return;
+    }
+
+    if(form.password !== form.confirmPassword){
+      toast.error("password and confirm pasword must have same value")
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email: form.email,
+      password: form.password,
+      options: {
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/admin`,
+      },
+    })
+
+    if (data?.user) {
+      toast.success("successfully registered")
+      console.log("user data is : ", data)
+      // router.push("/login")
+      setIsLoading(false)
+    } else if (error) {
+      toast.error("error while registering user.")
+      console.log("error is : ", error)
+      setIsLoading(false)
+    } else {
+      toast.error("error while registering user.")
+      console.log("error is : ", error)
+      setIsLoading(false)
+    }
   }
     
   return (
@@ -29,13 +92,15 @@ export default function Home() {
         </h1>
 
         <div className="flex flex-col gap-2 w-96 border-b border-gray-600 rounded-lg p-2">
-          <input type="text" placeholder="username"className=" w-full text-black focus:outline-none placeholder-gray-500"/>
+          <input type="email" name="email" onChange={handleInputChange} placeholder="username"className=" w-full text-black focus:outline-none placeholder-gray-500"/>
         </div>
         
         <div className="flex flex-col gap-2 w-96 border-b border-gray-600 rounded-lg p-2 relative">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="password"
+            name="password"
+            onChange={handleInputChange}
             className="w-full focus:outline-none placeholder-gray-500 text-black"
           />
           <button
@@ -86,6 +151,8 @@ export default function Home() {
           <input
             type={showConfirmPassword ? "text" : "password"}
             placeholder="confirm password"
+            name="confirmPassword"
+            onChange={handleInputChange}
             className="w-full focus:outline-none text-black placeholder-gray-500"
           />
           <button
@@ -135,7 +202,7 @@ export default function Home() {
         <div className="flex flex-col gap-4 w-96">
 
           <div className="relative justify-center mx-auto">
-            <InteractiveHoverButton text="Submit" className="border text-black border-gray-600 hover:bg-gray-200 " />
+            <InteractiveHoverButton text={isLoading ? `loading` : "Submit"} onClick={signup} className="border text-black border-gray-600 hover:bg-gray-200 " />
           </div>
 
           <div className="flex flex-col gap-2 w-96 text-sm">

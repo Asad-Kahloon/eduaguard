@@ -5,19 +5,71 @@ import {DotPattern}  from "@/components/ui/dotPattern";
 import { BorderBeam } from "@/components/ui/borderBeam";
 import {LetterPullup} from "@/components/ui/letterPullup";
 import InteractiveHoverButton from "@/components/ui/interactiveHoverButton"
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase"
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
 
+  const router = useRouter()
+
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const [form, setForm] = useState<{
+    email: string
+    password: string
+  }>({
+    email: "",
+    password: "",
+  })
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setForm((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  }
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   }
+
+  const login = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    setIsLoading(true)
+
+    if(!form.email || !form.password){
+      toast.error("all fields are required")
+      setIsLoading(false)
+      return
+    }
+
+    console.log(form)
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: form.email,
+      password: form.password,
+    })
+
+    if (data?.user) {
+      router.push("/admin")
+      setIsLoading(false)
+    } else if (error) {
+      toast.error("Please enter valid credentials")
+      console.log("error")
+      setIsLoading(false)
+    } else {
+      toast.error("Please enter valid credentials")
+      setIsLoading(false)
+      console.log(error)
+    }
+  }
     
   return (
-    <div className="relative py-8 flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
+    <div className="relative py-8 flex h-screen w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
       <form className="relative flex flex-col items-center gap-10 rounded-lg border bg-none md:shadow-xl px-24 py-16">
 
         <h1>
@@ -25,13 +77,15 @@ export default function Home() {
         </h1>
 
         <div className="flex flex-col gap-2 w-96 border-b border-gray-600 rounded-lg p-2">
-          <input type="text" placeholder="username"className=" w-full focus:outline-none text-black placeholder-gray-500"/>
+          <input type="email" name="email" placeholder="email" onChange={handleInputChange} className=" w-full focus:outline-none text-black placeholder-gray-500"/>
         </div>
         
         <div className="flex flex-col gap-2 w-96 border-b border-gray-600 rounded-lg p-2 relative">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="password"
+            name="password"
+            onChange={handleInputChange}
             className="w-full focus:outline-none text-black placeholder-gray-500"
           />
           <button
@@ -81,7 +135,7 @@ export default function Home() {
         <div className="flex flex-col gap-4 w-96">
 
           <div className="relative justify-center mx-auto">
-            <InteractiveHoverButton text="Submit" className="border border-gray-600 hover:bg-gray-200 text-black " />
+            <InteractiveHoverButton text={isLoading ? `loading` : `Submit`} onClick={login} className="border border-gray-600 hover:bg-gray-200 text-black " />
           </div>
 
           <div className="flex flex-col gap-2 w-96 text-sm">

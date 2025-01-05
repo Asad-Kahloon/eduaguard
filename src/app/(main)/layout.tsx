@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import { Toaster } from "sonner";
+import Header from "@/components/header/header";
+import { ScrollProgress } from "@/components/ui/scrollProgress";
+import Footer from "@/components/footer/footer";
 
 export const metadata: Metadata = {
   title: "EduaGuard",
@@ -13,13 +14,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
+    <>
+      <div
         className="antialiased"
       >
-        <Toaster position="top-right"/>
+        <Header />
+        <ScrollProgress />
         {children}
-      </body>
-    </html>
+        <Footer/>
+      </div>
+    </>
   );
 }
