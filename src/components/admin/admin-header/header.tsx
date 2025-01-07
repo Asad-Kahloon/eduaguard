@@ -19,12 +19,12 @@ function Header() {
 
     const links = [
         {
-          label: 'Home',
-          url: '/',
+          label: 'Dashboard',
+          url: '/admin',
         },
         {
-          label: 'News',
-          url: '/news',
+          label: 'Classes',
+          url: '/admin/classes',
         },
         {
           label: 'Courses',
@@ -45,24 +45,24 @@ function Header() {
         },
         {
           label: 'Admissions',
-          url: '/admissions',
+          url: '/admin/admissions',
         },
         {
           label: 'Lectures',
-          url: '/lectures',
+          url: '/admin/lectures',
         },
         {
           label: 'Online Tests',
-          url: 'online_test',
+          url: '/admin/online_test',
         },
-        {
-          label: 'About',
-          url: '/about',
-        },
-        {
-          label: 'Contact Us',
-          url: '/contact',
-        },
+        // {
+        //   label: 'About',
+        //   url: '/about',
+        // },
+        // {
+        //   label: 'Contact Us',
+        //   url: '/contact',
+        // },
       ];
 
 

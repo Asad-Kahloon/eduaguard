@@ -1,58 +1,81 @@
+'use client'
+import { getAllOnlineTests, getAllTestTypes } from '@/app/_actions/online_test';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import Link from 'next/link';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import Modal from '@/components/admin/admin-online-test/online_test_modal';
+import { GradualSpacing } from '@/components/ui/gradualSpacing';
 
-function page() {
+type Test = {
+  id: string; // Use `any` if the type isn't clear
+  name: string; // Use `any` if needed
+};
+
+type Tests = {
+  id: string; // Use `any` if the type isn't clear
+  image_url: string[];
+  class:string,
+  type:string,
+}
 
 
-      const articles = [
-        {
-          title: "Class-Based Tests",
-          items: [
-            { name: "5th Class", url: "#" },
-            { name: "6th Class", url: "#" },
-            { name: "7th Class", url: "#" },
-            { name: "8th Class", url: "#" },
-            { name: "9th Class", url: "#" },
-            { name: "10th Class", url: "#" },
-            { name: "11th Class", url: "#" },
-            { name: "12th Class", url: "#" },
-          ],
-        },
-        {
-          title: "Competitive Tests",
-          items: [
-            { name: "NAT-1 Test", url: "#" },
-            { name: "NAT-2 Test", url: "#" },
-            { name: "CSS", url: "#" },
-            { name: "IQ Class", url: "#" },
-            { name: "General Knowledge", url: "#" },
-            { name: "MDCAT Test", url: "#" },
-            { name: "ECAT Test", url: "#" },
-            { name: "GAT General", url: "#" },
-            { name: "GAT Subject", url: "#" },
-          ],
-        },
-        {
-          title: "Short Question Tests",
-          items: [
-            { name: "9th Class Physics Short Questions", url: "#" },
-            { name: "9th Class Chemistry Short Questions", url: "#" },
-            { name: "9th Class Math Short Questions", url: "#" },
-            { name: "9th Class Biology Short Questions", url: "#" },
-            { name: "9th Class Computer Short Questions", url: "#" },
-            { name: "9th Class English Short Questions", url: "#" },
-            { name: "10th Class Physics Short Questions", url: "#" },
-            { name: "10th Class Chemistry Short Questions", url: "#" },
-            { name: "10th Class Math Short Questions", url: "#" },
-            { name: "10th Class Biology Short Questions", url: "#" },
-            { name: "10th Class Computer Short Questions", url: "#" },
-            { name: "10th Class English Short Questions", url: "#" },
-            
-            
-          ],
-        },
-      ];
+function Page() {
+
+      const [testTypes, setTestTypes] = useState<Test[]>([]);
+      const [tests, setTests] = useState<Tests[]>([]);
+      const [isModalOpen, setIsModalOpen] = useState(false);
+      const [loading, setLoading] = useState(true);
+  const [modalData, setModalData] = useState({
+    className:'',
+    typeName:'',
+    imageUrls:[''],
+  });
+
+      const fetchData = async () => {
+        try {
+          // Fetch both tests and types data concurrently
+          const [testsResponse, typesResponse] = await Promise.all([
+            getAllOnlineTests(),
+            getAllTestTypes(),
+          ]);
+      
+          // Handle the data responses
+          const testsData = testsResponse?.data || [];
+          const typesData = typesResponse?.data || [];
+      
+          console.log("tests response: ", testsResponse);
+          console.log("types response: ", typesResponse);
+      
+          // Update the state with transformed data
+          setTests(testsData); // Set the classes data
+          setTestTypes(typesData); // Set the test types data
+
+      
+        } catch (error) {
+          console.error("An error occurred while fetching data:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+
+      useEffect(()=> {
+        fetchData();
+      },[])
+
+
+  const openModal = (typeName: string, className: string, imageUrls: string[]) => {
+    setModalData({ typeName, className, imageUrls });
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalData({
+      className:'',
+      typeName:'',
+      imageUrls:[''],
+    });
+  };
 
   return (
     <>
@@ -65,28 +88,44 @@ function page() {
         <h1 className="text-center text-4xl font-serif font-bold mb-8">
             Available Online Tests
         </h1>
-        
-        <div className="max-w-3xl mx-auto">
-          {articles.length === 0 ? (
-            <p className="text-center text-gray-500">No articles available</p>
+
+        {loading && ( 
+            <> 
+              <GradualSpacing text={'Loading Data...'} className='text-black text-xl' />
+            </>
+          )}
+
+        {!loading && (
+          <div className="max-w-3xl mx-auto">
+          {testTypes.length === 0 ? (
+            <p className="text-center text-gray-500">No Online Tests Available</p>
           ) : (
             <Accordion type="single" collapsible className="w-full space-y-4 transition-all duration-300">
-              {articles.map((article) => (
+              {testTypes.map((type) => (
                 <AccordionItem
-                  key={article.title}
-                  value={article.title}
+                  key={type.name}
+                  value={type.name}
                   className="bg-gray-200 rounded-lg shadow-md py-2 px-8 transition-all duration-300"
                 >
                   <AccordionTrigger className="text-lg font-medium hover:no-underline transition-all duration-300">
-                    {article.title}
+                    {type.name}
                   </AccordionTrigger>
                   <AccordionContent className="transition-all duration-300">
                     <div className="pt-4 pb-2 gap-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
-                      {article.items.map((item, index) => (
-                        <Link href={item.url} key={index} className='p-2 shadow-md rounded-lg text-center hover:bg-gray-100 hover:text-blue-500 hover:font-bold hover:underline transition-all duration-300'>
-                        {item.name}
-                        </Link>
-                      ))}
+                    {tests
+                    .filter((test) => test.type === type.name) // Filter tests based on type.name
+                    .map((test, index) => (
+                      <button
+                    key={index}
+                    className="p-2 shadow-md rounded-lg text-center hover:bg-gray-100 hover:text-blue-500 hover:font-bold hover:underline transition-all duration-300"
+                    onClick={() => openModal(type.name, test.class, test.image_url)} // Pass data to modal
+                  >
+                    {test.class}
+                  </button>
+                    ))}
+                    {tests.filter((test) => test.type === type.name).length === 0 && (
+                      <p className="text-center text-gray-500">No tests for this category</p>
+                    )}
                     </div>
                   </AccordionContent>
                 </AccordionItem>
@@ -94,10 +133,21 @@ function page() {
             </Accordion>
           )}
         </div>
+        )}
+        
+        
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        typeName={modalData.typeName}
+        className={modalData.className}
+        imageUrls={modalData.imageUrls || []}
+      />
 
     </>
   )
 }
 
-export default page
+export default Page
