@@ -15,16 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className="antialiased"
-      >
+      <>
         <Toaster position="top-right"/>
         <Header />
         <ScrollProgress />
         {children}
         <Footer/>
-      </body>
-    </html>
+      </>
   );
 }
