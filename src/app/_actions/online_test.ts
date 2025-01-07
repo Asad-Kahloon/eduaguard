@@ -49,14 +49,14 @@ export async function getAllTestTypes() {
 }
 
 
-export async function insertTestData(form: { class: string; type: string; url: string; }) {
+export async function insertTestData(form: { class: string; type: string; urls: string[]; }) {
   const supabase = createServerComponentClient({ cookies });
 
   const { data, error } = await supabase
     .from("online_tests") // Replace with your table name if different
     .insert([{ class: form.class,
                type : form.type,
-               image_url: form.url }]);
+               image_url: form.urls }]);
 
   if (error) {
     return {

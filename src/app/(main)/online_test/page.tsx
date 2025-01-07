@@ -67,33 +67,33 @@ function page() {
         </h1>
         
         <div className="max-w-3xl mx-auto">
-  {articles.length === 0 ? (
-    <p className="text-center text-gray-500">No articles available</p>
-  ) : (
-    <Accordion type="single" collapsible className="w-full space-y-4 transition-all duration-300">
-      {articles.map((article) => (
-        <AccordionItem
-          key={article.title}
-          value={article.title}
-          className="bg-gray-200 rounded-lg shadow-md py-2 px-8 transition-all duration-300"
-        >
-          <AccordionTrigger className="text-lg font-medium hover:no-underline transition-all duration-300">
-            {article.title}
-          </AccordionTrigger>
-          <AccordionContent className="transition-all duration-300">
-            <div className="pt-4 pb-2 gap-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
-              {article.items.map((item, index) => (
-                <Link href={item.url} key={index} className='p-2 shadow-md rounded-lg text-center hover:bg-gray-100 hover:text-blue-500 hover:font-bold hover:underline transition-all duration-300'>
-                {item.name}
-                </Link>
+          {articles.length === 0 ? (
+            <p className="text-center text-gray-500">No articles available</p>
+          ) : (
+            <Accordion type="single" collapsible className="w-full space-y-4 transition-all duration-300">
+              {articles.map((article) => (
+                <AccordionItem
+                  key={article.title}
+                  value={article.title}
+                  className="bg-gray-200 rounded-lg shadow-md py-2 px-8 transition-all duration-300"
+                >
+                  <AccordionTrigger className="text-lg font-medium hover:no-underline transition-all duration-300">
+                    {article.title}
+                  </AccordionTrigger>
+                  <AccordionContent className="transition-all duration-300">
+                    <div className="pt-4 pb-2 gap-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
+                      {article.items.map((item, index) => (
+                        <Link href={item.url} key={index} className='p-2 shadow-md rounded-lg text-center hover:bg-gray-100 hover:text-blue-500 hover:font-bold hover:underline transition-all duration-300'>
+                        {item.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
               ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      ))}
-    </Accordion>
-  )}
-</div>
+            </Accordion>
+          )}
+        </div>
       </div>
 
     </>

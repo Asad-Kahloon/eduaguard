@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Header from "@/components/header/header";
+import Header from "@/components/admin/admin-header/header";
 import { ScrollProgress } from "@/components/ui/scrollProgress";
 import Footer from "@/components/footer/footer";
 import { Toaster } from "sonner";
