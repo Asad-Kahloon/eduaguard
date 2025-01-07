@@ -1,81 +1,142 @@
-import { BorderBeam } from "@/components/ui/borderBeam";
-import BoxReveal from "@/components/ui/boxReveal";
-import { NeonGradientCard } from "@/components/ui/magicCard";
-import Link from "next/link";
-import { Cog, Search, Users } from 'lucide-react';
+'use client'
+import InteractiveHoverButton from "@/components/ui/interactiveHoverButton";
+import { ChangeEvent, useEffect, useState } from "react";
+import Select, { SingleValue } from "react-select";
+import { getAllClasses, getAllTestTypes, insertTestData } from "../_actions/online_test";
+import { toast } from "sonner";
 
-export default function home() {
+
+type Class = {
+  id: string; // Use `any` if the type isn't clear
+  name: string; // Use `any` if needed
+};
+
+type Test = {
+  id: string; // Use `any` if the type isn't clear
+  name: string; // Use `any` if needed
+};
+
+export default function Home() {
+
+
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [classes, setClasses] = useState<Class[]>([]);
+    const [testTypes, setTestTypes] = useState<Test[]>([]);
+    const [form, setForm] = useState<{
+      class: string
+      type: string
+      url: string
+    }>({
+      class: "",
+      type: "",
+      url:"",
+    })  
+
+
+      const handleClassChange = (selectedOption: SingleValue<Class>) => {
+        setForm((prev) => ({
+            ...prev,
+            class: selectedOption ? selectedOption.id : "",
+        }));
+    };
+
+    const handleTypeChange = (selectedOption: SingleValue<Test>) => {
+      setForm((prev) => ({
+          ...prev,
+          type: selectedOption ? selectedOption.id : "",
+      }));
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target
+      setForm((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }))
+    }
+
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+      e.preventDefault();
+
+      if(!form.class.trim() || !form.type.trim() || !form.url.trim()){
+        toast.error("all fields are required");
+        return
+      }
+
+      setIsLoading(true)
+      
+      console.log("form is : ", form)
+      const result = await insertTestData(form);
+
+      if (result.status) {
+        toast.success(result.message); // Success message
+        setIsLoading(false)
+      } else {
+        console.error(result.error);
+        toast.error(result.message); // Error message
+        setIsLoading(false)
+      }
+    }
+
+    const fetchData = async () => {
+      try {
+        const [classesResponse, typesResponse] = await Promise.all([
+          getAllClasses(),
+          getAllTestTypes(),
+        ]);
+    
+        // Handle the data responses
+        const classesData = classesResponse?.data || [];
+        const typesData = typesResponse?.data || [];
+    
+        setClasses(classesData); // Set the classes data
+        setTestTypes(typesData); // Set the test types data
+      } catch (error) {
+        console.error("An error occurred while fetching data:", error);
+      }
+    };
+    
+    useEffect(() => {
+      fetchData(); // Call the function inside useEffect
+    }, []);
+
   return (
-    <>
-      <div className="w-full flex flex-col items-center justify-center overflow-hidden pt-8 min-h-[600px] gap-6 bg-gray-100 p-8 text-center">
-        <BoxReveal boxColor={"#776f34"} duration={0.5}>
-          <p style={{color:'#776f34'}} className="text-[3.5rem] font-semibold">
-          Make your market share data actionable<span className="text-[#776f34]">.</span>
-          </p>
-        </BoxReveal>
+    <div className="w-full py-24">
+      <form onSubmit={handleSubmit} className="p-10 mx-auto text-black w-fit flex flex-col gap-6">
+        <h1 className="text-center text-3xl font-bold">Add Lectures</h1>
 
-        <BoxReveal boxColor={"#776f34"} duration={0.5}>
-            <p className="text-xl text-gray-500 font-bold">
-            Turn your retail audit data into granular, actionable, and timely insights for your sales and marketing teams.
-            </p>
-        </BoxReveal>
-
-        <BoxReveal boxColor={"#776f34"} duration={0.5}>
-        <div className='flex gap-4 font-serif font-bold'>
-            <div className="relative flex h-auto  text-white flex-col items-center justify-center overflow-hidden rounded-lg border bg-blue-500 shadow-md md:shadow-xl cursor-pointer hover:bg-blue-600">
-                <Link href='#' className="px-4 py-2">
-                    Learn More
-                </Link>
-                <BorderBeam size={100} duration={12} delay={9} />
-            </div>
-            <div className="relative flex h-auto text-white flex-col items-center justify-center overflow-hidden rounded-lg border bg-blue-500 shadow-md md:shadow-xl cursor-pointer hover:bg-blue-600">
-                <Link href='#' className="px-4 py-2">
-                    Request A Demo
-                </Link>
-                <BorderBeam size={100} duration={12} delay={9} />
-            </div>
+        <div>
+          <Select
+            options={classes}
+            placeholder="Select Class..."
+            isSearchable={true} // Enable search
+            onChange={handleClassChange} // Use custom handler
+            getOptionLabel={(option) => option.name} // Show country label
+            getOptionValue={(option) => option.id} // Set country value
+            className="w-full rounded-lg border-2 border-gray-300 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            noOptionsMessage={() => "No class found"}
+          />
         </div>
-        </BoxReveal>
-      </div>
-      <div className="p-16 flex flex-col sm:flex-row justify-start sm:justify-center items-center sm:items-start  gap-6">
 
-        <NeonGradientCard className="text-center flex flex-col gap-y-8 sm:w-1/3 bg-none text-black">
-          <p className="text-8xl font-bold">
-            <Search color="#ac9e02" strokeWidth={3} size={100} className="mx-auto text-4xl"/>
-          </p>
-          <p className="mt-4 text-4xl font-bold">
-            Search
-          </p>
-          <p className="mt-6 text-xl">
-            Find what you&apos;re looking for quickly with our search functionality.
-          </p>
-        </NeonGradientCard>
+        <div>
+          <Select
+            options={testTypes}
+            placeholder="Select test type..."
+            isSearchable={true} // Enable search
+            onChange={handleTypeChange} // Use custom handler
+            getOptionLabel={(option) => option.name} // Show country label
+            getOptionValue={(option) => option.id} // Set country value
+            className="w-full rounded-lg border-2 border-gray-300 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            noOptionsMessage={() => "No test types found"}
+          />
+        </div>
 
-        <NeonGradientCard className="text-center flex flex-col gap-y-8 sm:w-1/3 bg-none text-black">
-          <p className="text-8xl font-bold">
-            <Users color="#ac9e02" strokeWidth={3} size={100} className="mx-auto text-4xl"/>
-          </p>
-          <p className="mt-4 text-4xl font-bold">
-          Community
-          </p>
-          <p className="mt-6 text-xl">
-          Join a growing community of like-minded individuals.
-          </p>
-        </NeonGradientCard>
-        
-        <NeonGradientCard className="text-center flex flex-col gap-y-8 sm:w-1/3 bg-none text-black">
-          <p className="text-8xl font-bold">
-            <Cog color="#ac9e02" strokeWidth={3} size={100} className="mx-auto text-4xl"/>
-          </p>
-          <p className="mt-4 text-4xl font-bold">
-          Tools
-          </p>
-          <p className="mt-6 text-xl">
-          Explore a set of tools designed to enhance your experience.
-          </p>
-        </NeonGradientCard>
+          <input type="text" name="url" onChange={handleInputChange} placeholder="enter image url" className=" w-96 p-2 rounded-lg border-2 border-gray-300 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"/>
 
-      </div>
-    </>
+        <div className="relative justify-center mx-auto">
+            <InteractiveHoverButton type="submit" text={isLoading ? `loading` : `Insert`} className="border border-gray-600 hover:bg-gray-200 text-black text-sm " />
+          </div>
+      </form>
+    </div>
   );
 }
