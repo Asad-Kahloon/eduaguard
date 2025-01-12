@@ -48,7 +48,7 @@ function Header() {
         },
         {
           label: 'Online Tests',
-          url: 'online_test',
+          url: '/online_test',
         },
         {
           label: 'About',

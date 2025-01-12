@@ -1,42 +1,48 @@
+'use client'
+import { getAllAdmissions } from '@/app/_actions/admissions';
+import { GradualSpacing } from '@/components/ui/gradualSpacing';
 import Link from 'next/link';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-function page() {
+type Admissions = {
+  id: string; // Use `any` if the type isn't clear
+  url: string;
+  title:string,
+  description:string,
+  last_date:string,
+}
 
+function Page() {
 
-    const admissions = [
-        {
-          name: "Admissions Alerts",
-          description: "Stay updated with the latest admission alerts and announcements. Never miss a deadline!",
-          href: "#",
-        },
-        {
-          name: "Admission Guides",
-          description: "Access detailed admission guides to help you navigate the admission process with ease.",
-          href: "#",
-        },
-        {
-          name: "1st Year Admissions",
-          description: "Find all the information you need about first-year admissions, eligibility, and deadlines.",
-          href: "#",
-        },
-        {
-          name: "Bachelors Admissions",
-          description: "Discover the requirements for undergraduate programs, including application deadlines and criteria.",
-          href: "#",
-        },
-        {
-          name: "Masters Admissions",
-          description: "Get all the details about Master's degree admissions, including eligibility and application forms.",
-          href: "#",
-        },
-        {
-          name: "Admissions Android Apps",
-          description: "Explore apps that make the admission process simpler and more efficient for you.",
-          href: "#",
-        },
+        const [admissions, setAdmissions] = useState<Admissions[]>([]);
+        const [loading, setLoading] = useState(true);
         
-      ];
+
+        const fetchData = async () => {
+                try {
+                  // Fetch both tests and types data concurrently
+                  const admissionsResponse = await getAllAdmissions()
+              
+                  // Handle the data responses
+                  const admissionsData = admissionsResponse?.data || [];
+              
+                  console.log("tests response: ", admissionsResponse);
+              
+                  // Update the state with transformed data
+                  setAdmissions(admissionsData); // Set the classes data
+        
+              
+                } catch (error) {
+                  console.error("An error occurred while fetching data:", error);
+                } finally {
+                  setLoading(false);
+                }
+              };
+        
+        
+              useEffect(()=> {
+                fetchData();
+              },[])
 
       const programs = [
         {
@@ -86,15 +92,25 @@ function page() {
 
       <div className='py-32 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-6 px-16 text-black'>
         <h1 className='sm:col-span-2 md:col-span-3 lg:col-span-4 text-center text-4xl font-serif font-bold mb-8'>Admissions</h1>
-        {admissions.map((feature) => (
-            <div key={feature.name} className='shadow-lg p-8 flex flex-col items-center gap-4 transform transition-transform hover:-translate-y-2 duration-500'>
-                <h1 className='text-3xl font-bold text-center'>{feature.name}</h1>
-                <p className='text-xl text-gray-700 text-center'>{feature.description}</p>
-                <Link href={feature.href} className='font-semibold text-green-600 hover:text-green-700 hover:underline transition-all duration-300'>
-                    Read More
-                </Link>
-            </div>
-        ))}
+        {loading && ( 
+          <div className='mx-auto grid-cols-1 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center'> 
+            <GradualSpacing text={'Loading Data...'} className='text-black text-xl ' />
+          </div>
+        )}
+        {!loading && (
+          <>
+          {admissions?.map((admission) => (
+              <div key={admission.id} className='shadow-lg p-8 flex flex-col items-center gap-4 transform transition-transform hover:-translate-y-2 duration-500'>
+                  <h1 className='text-3xl font-bold text-center'>{admission.title}</h1>
+                  <p className='text-xl text-gray-700 text-center'>{admission.description}</p>
+                  <Link href={admission.url} target='_blank' rel='noopener noreferrer' className='font-semibold text-green-600 hover:text-green-700 hover:underline transition-all duration-300'>
+                      Read More
+                  </Link>
+                  <p className='text-gray-600 text-xs self-end'>Last Date : {admission.last_date}</p>
+              </div>
+          ))}
+          </>
+      )}
       </div>
 
       <div className='py-24 px-8 text-black'>
@@ -126,4 +142,4 @@ function page() {
   )
 }
 
-export default page
+export default Page
