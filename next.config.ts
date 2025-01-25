@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
     domains: ['*'], // Accepts any domain
     unoptimized: true, // Allows unoptimized images for more flexibility
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "10mb", // Increases the body size limit for file uploads
+    },
+  },
 };
 
 export default nextConfig;

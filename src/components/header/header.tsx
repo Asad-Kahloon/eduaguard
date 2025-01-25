@@ -81,12 +81,12 @@ function Header() {
                 </Link>
                 <BorderBeam size={100} duration={12} delay={9} />
             </div>
-            <div className="relative flex h-auto w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-gray-100 shadow-md md:shadow-xl cursor-pointer hover:bg-gray-200">
+            {/* <div className="relative flex h-auto w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-gray-100 shadow-md md:shadow-xl cursor-pointer hover:bg-gray-200">
                 <Link href='/register' className="px-4 py-2 text-black">
                     Register
                 </Link>
                 <BorderBeam size={100} duration={12} delay={9} />
-            </div>
+            </div> */}
         </div>
       </div>
       <div className="w-full flex justify-between py-4 px-8 items-center relative shadow-md mt-4 bg-gray-300 text-black">
